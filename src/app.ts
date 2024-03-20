@@ -49,8 +49,6 @@ const handler = (req: any, res: { end: (arg0: string) => void; }) => {
   res.end(d.toString())
 }
 
-module.exports = allowCors(handler)
-
 
 router.get("/marker", async (req: any, res: any) => {
   const marker = req.query as Marker;
@@ -99,3 +97,5 @@ app.listen(PORT, (error: any) => {
     console.log("Error occurred, server can't start", error);
   }
 });
+
+module.exports = allowCors(handler)
