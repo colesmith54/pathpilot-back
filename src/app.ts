@@ -48,6 +48,7 @@ const allowCors = fn => async (req, res) => {
 router.get("/marker", allowCors(async (req: any, res: any) => {
   const marker = req.query as Marker;
   const API_KEY = process.env.GOOGLE_API_KEY;
+  console.log(marker, API_KEY)
   try {
     const markerInfo = await axios.get(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${marker.placeId}&key=${API_KEY}&fields=name,formatted_address`
