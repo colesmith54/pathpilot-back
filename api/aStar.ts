@@ -74,13 +74,12 @@ function aStarRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] {
             neighborLatLng
           );
           const currentToEndAngle = calculateHeuristic({ lat, lng }, end);
-          const angleDifference = Math.abs(
-            currentToNeighborAngle - currentToEndAngle
-          );
+          const angleDifference = Math.abs(currentToNeighborAngle - currentToEndAngle);
+          const correctedAngleDifference = Math.abs(Math.min((2 * Math.PI) - angleDifference, angleDifference));
           queue.enqueue({
             lat: neighbor.end[0],
             lng: neighbor.end[1],
-            heuristic: distance + Math.log(Math.log(angleDifference)),
+            heuristic: distance + 0.1 * correctedAngleDifference,
           });
         }
       }
