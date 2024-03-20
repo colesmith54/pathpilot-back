@@ -27,8 +27,25 @@ const PORT = 3000;
 
 app.use(cors());
 
+const allowCors = fn => async (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+  return await fn(req, res)
+}
 
-router.get("/marker", async (req: any, res: any) => {
+
+router.get("/marker", allowCors(async (req: any, res: any) => {
   const marker = req.query as Marker;
   const API_KEY = process.env.GOOGLE_API_KEY;
   try {
@@ -40,9 +57,9 @@ router.get("/marker", async (req: any, res: any) => {
     console.log(error);
     res.status(500).send("Error occurred while fetching marker info");
   }
-});
+}));
 
-router.get("/nearest", async (req: any, res: any) => {
+router.get("/nearest", allowCors(async (req: any, res: any) => {
   const marker = req.query as Marker;
   const API_KEY = process.env.GOOGLE_API_KEY;
   try {
@@ -54,9 +71,9 @@ router.get("/nearest", async (req: any, res: any) => {
     console.log(error);
     res.status(500).send("Error occurred while fetching marker info");
   }
-});
+}));
 
-router.get("/route", async (req: any, res: any) => {
+router.get("/route", allowCors(async (req: any, res: any) => {
   const start = req.query.start as Marker;
   const end = req.query.end as Marker;
 
@@ -64,7 +81,7 @@ router.get("/route", async (req: any, res: any) => {
   const dijkstra = dijkstraRoute(graph as IGraph, closestStart, closestEnd);
   const aStar = aStarRoute(graph as IGraph, closestStart, closestEnd);
   res.status(200).send({ dijkstra, aStar });
-});
+}));
 
 app.use("/api", router);
 
