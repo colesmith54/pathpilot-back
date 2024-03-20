@@ -106,13 +106,19 @@ function aStarRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] {
 }
 
 function calculateHeuristic(a: LatLng, b: LatLng): number {
-  const dx = b.lng - a.lng;
-  const dy = b.lat - a.lat;
-  let angle = Math.atan2(dy, dx);
-  if (angle < 0) {
-    angle += 2 * Math.PI;
-  }
-  return angle;
+  const R = 6371e3; // radius of Earth in metres
+  const lat1Rad = a.lat * Math.PI/180; // convert degrees to radians
+  const lat2Rad = b.lat * Math.PI/180;
+  const deltaLat = (b.lat-a.lat) * Math.PI/180;
+  const deltaLng = (b.lng-a.lng) * Math.PI/180;
+
+  const aVal = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
+               Math.cos(lat1Rad) * Math.cos(lat2Rad) *
+               Math.sin(deltaLng/2) * Math.sin(deltaLng/2);
+  const c = 2 * Math.atan2(Math.sqrt(aVal), Math.sqrt(1-aVal));
+
+  const distance = R * c; // in metres
+  return distance;
 }
 
 export { aStarRoute };
