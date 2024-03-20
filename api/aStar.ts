@@ -80,7 +80,7 @@ function aStarRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] {
           queue.enqueue({
             lat: neighbor.end[0],
             lng: neighbor.end[1],
-            heuristic: distance + 0.002 * angleDifference,
+            heuristic: distance + Math.log(Math.log(angleDifference)),
           });
         }
       }
