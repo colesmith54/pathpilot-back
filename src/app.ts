@@ -4,8 +4,6 @@ import { dijkstraRoute } from "./dijkstra";
 import { aStarRoute } from "./aStar";
 import { snapToPoints } from "./helpers";
 import graph from "../data/graph.json";
-import dotenv from "dotenv";
-dotenv.config();
 
 type Marker = {
   latLng: google.maps.LatLngLiteral;
@@ -22,16 +20,14 @@ interface IGraph {
 
 const express = require("express");
 const app = express();
-const router = express.Router();
 const PORT = 3000;
 
 app.use(cors());
 
-
-router.get("/marker", async (req: any, res: any) => {
+app.get("/api/marker", async (req: any, res: any) => {
   const marker = req.query as Marker;
   const API_KEY = process.env.GOOGLE_API_KEY;
-  console.log(marker, API_KEY)
+  console.log(marker, API_KEY);
   try {
     const markerInfo = await axios.get(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${marker.placeId}&key=${API_KEY}&fields=name,formatted_address`
@@ -43,7 +39,7 @@ router.get("/marker", async (req: any, res: any) => {
   }
 });
 
-router.get("/nearest", async (req: any, res: any) => {
+app.get("/api/nearest", async (req: any, res: any) => {
   const marker = req.query as Marker;
   const API_KEY = process.env.GOOGLE_API_KEY;
   try {
@@ -57,17 +53,14 @@ router.get("/nearest", async (req: any, res: any) => {
   }
 });
 
-router.get("/route", async (req: any, res: any) => {
+app.get("/api/route", async (req: any, res: any) => {
   const start = req.query.start as Marker;
   const end = req.query.end as Marker;
-
   const { closestStart, closestEnd } = snapToPoints(start, end);
   const dijkstra = dijkstraRoute(graph as IGraph, closestStart, closestEnd);
   const aStar = aStarRoute(graph as IGraph, closestStart, closestEnd);
   res.status(200).send({ dijkstra, aStar });
 });
-
-app.use("/api", router);
 
 app.listen(PORT, (error: any) => {
   if (!error) {
