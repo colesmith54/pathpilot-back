@@ -2,9 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.ts",
+  "main": "api/index.ts",
   "scripts": {
-    "start": "node src/app.ts"
+    "start": "node api/index.ts"
   },
   "keywords": [],
   "author": "",

@@ -69,3 +69,5 @@ app.listen(PORT, (error: any) => {
     console.log("Error occurred, server can't start", error);
   }
 });
+
+module.exports = app;
