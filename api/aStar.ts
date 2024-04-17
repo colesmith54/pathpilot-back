@@ -75,7 +75,6 @@ function aStarRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] {
       }
     }
   }
-  }
 
   // Build the path from end to start
   const path: LatLng[] = [];
