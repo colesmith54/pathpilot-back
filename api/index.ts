@@ -57,9 +57,16 @@ app.get("/api/route", async (req: any, res: any) => {
   const start = req.query.start as Marker;
   const end = req.query.end as Marker;
   const { closestStart, closestEnd } = snapToPoints(start, end);
+
+  const startTime = Date.now();
+
   const dijkstra = dijkstraRoute(graph as IGraph, closestStart, closestEnd);
+  const dijkstraTime = Date.now() - startTime;
+
   const aStar = aStarRoute(graph as IGraph, closestStart, closestEnd);
-  res.status(200).send({ dijkstra, aStar });
+  const aStarTime = Date.now() - dijkstraTime;
+
+  res.status(200).send({ dijkstra, aStar, dijkstraTime, aStarTime });
 });
 
 app.listen(PORT, (error: any) => {
