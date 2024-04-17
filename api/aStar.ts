@@ -70,7 +70,7 @@ function aStarRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] {
           previous[neighborNode] = currentNodeKey;
           const neighborLatLng = extractLatLng(neighborNode);
           const heuristicValue = calculateHeuristic(neighborLatLng, end);
-          queue.enqueue({ lat: neighbor.end[0], lng: neighbor.end[1], heuristic: distance + 10 * heuristicValue });
+          queue.enqueue({ lat: neighbor.end[0], lng: neighbor.end[1], heuristic: distance + 2 * heuristicValue });
         }
       }
     }
