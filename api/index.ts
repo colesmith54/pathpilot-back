@@ -64,7 +64,7 @@ app.get("/api/route", async (req: any, res: any) => {
   const dijkstraTime = Date.now() - startTime;
 
   const aStar = aStarRoute(graph as IGraph, closestStart, closestEnd);
-  const aStarTime = Date.now() - dijkstraTime;
+  const aStarTime = Date.now() - startTime - dijkstraTime;
 
   res.status(200).send({ dijkstra, aStar, dijkstraTime, aStarTime });
 });
