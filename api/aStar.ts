@@ -69,21 +69,12 @@ function aStarRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] {
           distances[neighborNode] = distance;
           previous[neighborNode] = currentNodeKey;
           const neighborLatLng = extractLatLng(neighborNode);
-          const currentToNeighborAngle = calculateHeuristic(
-            { lat, lng },
-            neighborLatLng
-          );
-          const currentToEndAngle = calculateHeuristic({ lat, lng }, end);
-          const angleDifference = Math.abs(currentToNeighborAngle - currentToEndAngle);
-          const correctedAngleDifference = Math.abs(Math.min((2 * Math.PI) - angleDifference, angleDifference));
-          queue.enqueue({
-            lat: neighbor.end[0],
-            lng: neighbor.end[1],
-            heuristic: distance + 0.1 * correctedAngleDifference,
-          });
+          const heuristicValue = calculateHeuristic(neighborLatLng, end);
+          queue.enqueue({ lat: neighbor.end[0], lng: neighbor.end[1], heuristic: distance + heuristicValue });
         }
       }
     }
+  }
   }
 
   // Build the path from end to start
@@ -107,11 +98,7 @@ function aStarRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] {
 function calculateHeuristic(a: LatLng, b: LatLng): number {
   const dx = b.lng - a.lng;
   const dy = b.lat - a.lat;
-  let angle = Math.atan2(dy, dx);
-  if (angle < 0) {
-    angle += 2 * Math.PI;
-  }
-  return angle;
+  return Math.sqrt(dx * dx + dy * dy);
 }
 
 export { aStarRoute };
