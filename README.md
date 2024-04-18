@@ -1,4 +1,4 @@
-Deployed at [https://pathpilot-back.vercel.app/](https://pathpilot.vercel.app/)
+Deployed at [https://pathpilot-back.vercel.app/](https://pathpilot-back.vercel.app/)
 
 To run locally:
 1. Clone the repository:
