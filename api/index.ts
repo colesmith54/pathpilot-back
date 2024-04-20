@@ -2,6 +2,7 @@ import axios from "axios";
 import cors from "cors";
 import { dijkstraRoute } from "./dijkstra";
 import { aStarRoute } from "./aStar";
+import { bfsRoute } from "./bfs";
 import { snapToPoints } from "./helpers";
 import graph from "../data/graph.json";
 
@@ -66,7 +67,10 @@ app.get("/api/route", async (req: any, res: any) => {
   const aStar = aStarRoute(graph as IGraph, closestStart, closestEnd);
   const aStarTime = Date.now() - startTime - dijkstraTime;
 
-  res.status(200).send({ dijkstra, aStar, dijkstraTime, aStarTime });
+  const bfs = bfsRoute(graph as IGraph, closestStart, closestEnd);
+  const bfsTime = Date.now() - startTime - aStarTime - dijkstraTime;
+
+  res.status(200).send({ dijkstra, aStar, dijkstraTime, aStarTime, bfs, bfsTime });
 });
 
 app.listen(PORT, (error: any) => {
