@@ -17,6 +17,6 @@ To run locally:
    ```
 4. Start the development server:
    ```bash
-   npx ts-node run start
+   npx ts-node api/index.ts
    ```
 **Note:** Since this repo does not have my API keys in it, most functions will not work locally.
