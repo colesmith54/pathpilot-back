@@ -20,7 +20,7 @@ const extractLatLng = (node: string): LatLng => {
     return { lat: parseFloat(lat), lng: parseFloat(lng) };
 };
 
-function bfsRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] | null {
+function bfsRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] {
     const queue: string[] = [];
     const visited: Set<string> = new Set();
     const previous: {[key: string]: string | undefined} = {};
@@ -52,7 +52,7 @@ function bfsRoute(graph: IGraph, start: LatLng, end: LatLng): LatLng[] | null {
             }
         }
     }
-    return null;
+    return [];
 }
 
 export {bfsRoute};

@@ -56,18 +56,26 @@ app.get("/api/nearest", async (req: any, res: any) => {
 
 app.get("/api/route", async (req: any, res: any) => {
   const start = req.query.start as Marker;
+  const mid = req.query.mid as Marker | undefined;
   const end = req.query.end as Marker;
-  const { closestStart, closestEnd } = snapToPoints(start, end);
+
+  const { closestStart, closestEnd, closestMid } = snapToPoints(start, end, mid);
 
   const startTime = Date.now();
 
-  const dijkstra = dijkstraRoute(graph as IGraph, closestStart, closestEnd);
+  const dijkstra = mid ? 
+    [...dijkstraRoute(graph as IGraph, closestStart, closestMid), ...dijkstraRoute(graph as IGraph, closestMid, closestEnd)] :
+    dijkstraRoute(graph as IGraph, closestStart, closestEnd);
   const dijkstraTime = Date.now() - startTime;
 
-  const aStar = aStarRoute(graph as IGraph, closestStart, closestEnd);
+  const aStar = mid ? 
+    [...aStarRoute(graph as IGraph, closestStart, closestMid), ...aStarRoute(graph as IGraph, closestMid, closestEnd)] :
+    aStarRoute(graph as IGraph, closestStart, closestEnd);
   const aStarTime = Date.now() - startTime - dijkstraTime;
 
-  const bfs = bfsRoute(graph as IGraph, closestStart, closestEnd);
+  const bfs = mid ? 
+    [...bfsRoute(graph as IGraph, closestStart, closestMid), ...bfsRoute(graph as IGraph, closestMid, closestEnd)] :
+    bfsRoute(graph as IGraph, closestStart, closestEnd);
   const bfsTime = Date.now() - startTime - aStarTime - dijkstraTime;
 
   res.status(200).send({ dijkstra, aStar, dijkstraTime, aStarTime, bfs, bfsTime });

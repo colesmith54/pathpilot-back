@@ -41,7 +41,7 @@ const getDistance = (
   return R * c;
 };
 
-const snapToPoints = (start: Marker, end: Marker) => {
+const snapToPoints = (start: Marker, end: Marker, mid: Marker | undefined) => {
   const graphArray = Object.keys(graph).map((key) => {
     const [lat, lng] = key.slice(1, -1).split(", ").map(Number);
     return { lat, lng };
@@ -52,13 +52,20 @@ const snapToPoints = (start: Marker, end: Marker) => {
       ? curr
       : prev;
   });
+
+  const closestMid = mid ? reduce(graphArray, (prev: any, curr: any) => {
+    return getDistance(mid.latLng, curr) < getDistance(mid.latLng, prev)
+      ? curr
+      : prev;
+  }) : null;
+
   const closestEnd = reduce(graphArray, (prev: any, curr: any) => {
     return getDistance(end.latLng, curr) < getDistance(end.latLng, prev)
       ? curr
       : prev;
   });
 
-  return { closestStart, closestEnd };
+  return { closestStart, closestEnd, closestMid };
 };
 
 export { getDistance, snapToPoints };
